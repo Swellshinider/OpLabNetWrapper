@@ -2,7 +2,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
   </Folder>
-  <Project Path="OpLabNetWrapper.Console/OpLabNetWrapper.Console.csproj" />
+  <Project Path="OpLabNetWrapper.Debug/OpLabNetWrapper.Debug.csproj" />
   <Project Path="OpLabNetWrapper.Tests/OpLabNetWrapper.Tests.csproj" />
   <Project Path="OpLabNetWrapper/OpLabNetWrapper.csproj" />
 </Solution>
