@@ -1,6 +1,6 @@
 # OpLabNetWrapper
 
-This project contains a lightweight OpLab REST API wrapper for .NET.
+This project contains a lightweight [OpLab REST API](https://apidocs.oplab.com.br/) wrapper for .NET.
 
 Quick start example
 
@@ -8,36 +8,29 @@ Quick start example
 using System;
 using OpLabNetWrapper;
 
-class Program
+public static class Program
 {
-    static async System.Threading.Tasks.Task Main()
+    public static async Task Main(string[] args)
     {
-        using var client = new OpLabClient();
-        // authenticate
-        var user = await client.AuthenticateAsync("you@example.com", "your-password");
-        Console.WriteLine($"Hello {user?.Name}, token len: {user?.AccessToken?.Length}");
+        var environmentVariable = Environment.GetEnvironmentVariable("OPLAB_API_KEY", EnvironmentVariableTarget.Machine) 
+            ?? throw new InvalidOperationException("OPLAB_API_KEY environment variable is not set.");
 
-        // fetch quotes
-        var quotes = await client.GetQuotesAsync("PETR4,ABEV3");
-        foreach (var q in quotes ?? Array.Empty<OpLabNetWrapper.Models.Quote>())
-            Console.WriteLine($"{q.Symbol} = {q.Close}");
+        // Default Instance of OpLabClient
+        using var client = new OpLabClient();
+
+        // Set the access token for authentication, you can also use your email and password to authenticate
+        // client.AuthenticateAsync("email", "password");
+        client.SetAccessToken(environmentVariable);
+
+        var response = await client.GetQuotesAsync("PETR4");
+
+        if (response == null || response.Count == 0)
+        {
+            Console.WriteLine("No data received.");
+            return;
+        }
+
+        Console.WriteLine($"Result: {response[0].Symbol} - {response[0].Close}");
     }
 }
 ```
-
-Files added by the wrapper generator:
-
-- OpLabNetWrapper/OpLabClient.cs
-- OpLabNetWrapper/Models/UserInfo.cs
-- OpLabNetWrapper/Models/Quote.cs
-- OpLabNetWrapper/Models/Instrument.cs
-- OpLabNetWrapper/Models/OptionInstrument.cs
-- OpLabNetWrapper/Models/Portfolio.cs
-- OpLabNetWrapper/Models/Order.cs
-
-Next steps
-
-- Run `dotnet build` on the solution to validate the project and generate XML docs.
-- Extend models and add methods for any additional endpoints you need (portfolios, orders, watchlists, etc.).
-# OpLabNetWrapper
-.NET Wrapper for the OpLab API (https://apidocs.oplab.com.br/)

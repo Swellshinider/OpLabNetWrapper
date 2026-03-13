@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OpLabNetWrapper.Debug;
+﻿namespace OpLabNetWrapper.Debug;
 
 public static class Program
 {
@@ -17,6 +15,13 @@ public static class Program
         client.SetAccessToken(environmentVariable);
 
         var response = await client.GetQuotesAsync("PETR4");
-        Console.WriteLine($"Result: {response}");
+
+        if (response == null || response.Count == 0)
+        {
+            Console.WriteLine("No data received.");
+            return;
+        }
+
+        Console.WriteLine($"Result: {response[0].Symbol} - {response[0].Close}");
     }
 }
